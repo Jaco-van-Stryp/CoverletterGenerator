@@ -7,7 +7,7 @@ public class ScraperService : IScraperService
     public async Task<string> GetJobDescription(string url)
     {
         using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
+        await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
         var page = await browser.NewPageAsync();
 
         await page.GotoAsync(url);

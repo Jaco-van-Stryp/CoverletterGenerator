@@ -17,7 +17,7 @@ namespace CoverletterGenerator.Features.UploadCV
                     }
                 )
                 .WithName("UploadCV")
-                .WithOpenApi()
+
                 .RequireAuthorization()
                 .DisableAntiforgery();
         }

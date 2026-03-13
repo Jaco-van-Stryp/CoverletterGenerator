@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find /c/Users/jacov/source/repos/CoverletterGenerator/CoverletterGenerator -name \"*.cs\" -type f | xargs grep -l \"app\\\\.\\\\|MapGet\\\\|MapPost\" 2>/dev/null)"
+      "Bash(find /c/Users/jacov/source/repos/CoverletterGenerator/CoverletterGenerator -name \"*.cs\" -type f | xargs grep -l \"app\\\\.\\\\|MapGet\\\\|MapPost\" 2>/dev/null)",
+      "Bash(xargs grep:*)",
+      "WebSearch"
     ]
   }
 }

@@ -15,7 +15,7 @@ namespace CoverletterGenerator.Features.LoginUser
                     }
                 )
                 .WithName("LoginUser")
-                .WithOpenApi()
+
                 .AllowAnonymous();
         }
     }

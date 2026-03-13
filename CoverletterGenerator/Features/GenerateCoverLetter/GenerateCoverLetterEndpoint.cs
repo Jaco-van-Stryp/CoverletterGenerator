@@ -18,7 +18,7 @@ namespace CoverletterGenerator.Features.GenerateCoverLetter
                     }
                 )
                 .WithName("GenerateCoverLetter")
-                .WithOpenApi()
+
                 .RequireAuthorization();
         }
     }

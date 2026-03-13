@@ -4,12 +4,38 @@ using CoverletterGenerator.Features.LoginUser;
 using CoverletterGenerator.Features.UploadCV;
 using CoverletterGenerator.Infrastructure.DependencyInjection;
 using CoverletterGenerator.Infrastructure.ExceptionHandling;
-using Scalar.AspNetCore;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer(
+        (doc, _, _) =>
+        {
+            doc.Components ??= new OpenApiComponents();
+            doc.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+            doc.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Please enter token",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+            };
+            doc.Security ??= new List<OpenApiSecurityRequirement>();
+            doc.Security.Add(
+                new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("Bearer", doc)] = new List<string>(),
+                }
+            );
+            return Task.CompletedTask;
+        }
+    );
+});
 builder.Services.AddPostgres(builder.Configuration);
 builder.Services.AddAnthropicService(builder.Configuration);
 builder.Services.AddPlaywrightServices();
@@ -22,7 +48,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
 }
 
 app.UseHttpsRedirection();
