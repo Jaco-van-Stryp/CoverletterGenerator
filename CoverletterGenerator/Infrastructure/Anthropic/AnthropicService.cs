@@ -15,7 +15,7 @@ namespace CoverletterGenerator.Infrastructure.Anthropic
             _client = new AnthropicClient { ApiKey = _options.ApiKey, BaseUrl = _options.BaseUrl };
         }
 
-        public async Task<string> GenerateAIResponse(string prompt)
+        public async Task<AiResponse> GenerateAIResponse(string prompt)
         {
             var message = await _client.Messages.Create(
                 new MessageCreateParams
@@ -26,14 +26,10 @@ namespace CoverletterGenerator.Infrastructure.Anthropic
                 }
             );
 
-            var lastContent = message.Content.Last();
-            if (lastContent.TryPickText(out var textBlock))
-                return textBlock.Text;
-
-            throw new InvalidOperationException("No text block in response.");
+            return ToAiResponse(message);
         }
 
-        public async Task<string> GenerateAIResponse(string systemPrompt, string prompt)
+        public async Task<AiResponse> GenerateAIResponse(string systemPrompt, string prompt)
         {
             var message = await _client.Messages.Create(
                 new MessageCreateParams
@@ -45,11 +41,23 @@ namespace CoverletterGenerator.Infrastructure.Anthropic
                 }
             );
 
-            var lastContent = message.Content.Last();
-            if (lastContent.TryPickText(out var textBlock))
-                return textBlock.Text;
+            return ToAiResponse(message);
+        }
 
-            throw new InvalidOperationException("No text block in response.");
+        private AiResponse ToAiResponse(global::Anthropic.Models.Messages.Message message)
+        {
+            var lastContent = message.Content.Last();
+            if (!lastContent.TryPickText(out var textBlock))
+                throw new InvalidOperationException("No text block in response.");
+
+            return new AiResponse(
+                Text: textBlock.Text,
+                Model: _options.Model,
+                InputTokens: message.Usage.InputTokens,
+                OutputTokens: message.Usage.OutputTokens,
+                CacheCreationInputTokens: message.Usage.CacheCreationInputTokens ?? 0,
+                CacheReadInputTokens: message.Usage.CacheReadInputTokens ?? 0
+            );
         }
     }
 }

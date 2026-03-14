@@ -11,5 +11,6 @@ namespace CoverletterGenerator.Data
         public DbSet<Entities.CV> CVs { get; set; } = null!;
         public DbSet<Entities.Jobs> Jobs { get; set; } = null!;
         public DbSet<Entities.Coverletters> Coverletters { get; set; } = null!;
+        public DbSet<Entities.AiTokenUsage> AiTokenUsages { get; set; } = null!;
     }
 }

@@ -9,5 +9,6 @@
         public ICollection<CV> CVs { get; set; } = new List<CV>();
         public ICollection<Jobs> Jobs { get; set; } = new List<Jobs>();
         public ICollection<Coverletters> Coverletters { get; set; } = new List<Coverletters>();
+        public ICollection<AiTokenUsage> AiTokenUsages { get; set; } = new List<AiTokenUsage>();
     }
 }
